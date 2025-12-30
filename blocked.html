@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>URL Blocked</title>
+  <link rel="stylesheet" href="blocked.css">
+</head>
+<body>
+  <div class="container">
+    <div class="icon">&#128683;</div>
+    <h1>URL Blocked</h1>
+    <p class="message">This page has been blocked by URL Blocker.</p>
+
+    <div class="details">
+      <div class="detail-row">
+        <span class="label">Blocked URL:</span>
+        <span id="blocked-url" class="value"></span>
+      </div>
+      <div class="detail-row">
+        <span class="label">Matched Pattern:</span>
+        <span id="matched-pattern" class="value pattern"></span>
+      </div>
+    </div>
+
+    <div class="actions">
+      <button id="go-back" class="btn btn-primary">Go Back</button>
+      <button id="manage-patterns" class="btn btn-secondary">Manage Patterns</button>
+    </div>
+
+    <p class="tip">Stay focused! You blocked this site for a reason.</p>
+  </div>
+
+  <script src="blocked.js"></script>
+</body>
+</html>
