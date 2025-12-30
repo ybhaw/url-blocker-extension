@@ -1,78 +1,82 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <link rel="stylesheet" href="popup.css">
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>URL Blocker</h1>
-      <div class="toggle-container">
-        <input type="checkbox" id="enable-toggle" class="toggle-input" checked>
-        <label for="enable-toggle" class="toggle-slider"></label>
-        <span id="toggle-label" class="toggle-label active">Active</span>
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>URL Blocker</h1>
+        <div class="toggle-container">
+          <input type="checkbox" id="enable-toggle" class="toggle-input" checked />
+          <label for="enable-toggle" class="toggle-slider"></label>
+          <span id="toggle-label" class="toggle-label active">Active</span>
+        </div>
+      </div>
+
+      <div class="pause-controls">
+        <select id="pause-select" class="pause-select">
+          <option value="">Pause blocking...</option>
+          <option value="5">5 minutes</option>
+          <option value="15">15 minutes</option>
+          <option value="30">30 minutes</option>
+          <option value="60">1 hour</option>
+          <option value="120">2 hours</option>
+          <option value="resume">Resume now</option>
+        </select>
+        <span id="pause-status" class="pause-status"></span>
+      </div>
+
+      <div class="stats">
+        <div class="stat">
+          <span class="stat-value" id="stat-today">0</span>
+          <span class="stat-label">Today</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-total">0</span>
+          <span class="stat-label">Total</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value" id="stat-patterns">0</span>
+          <span class="stat-label">Patterns</span>
+        </div>
+      </div>
+
+      <div id="current-site">
+        <p class="site-label">Current site:</p>
+        <p id="site-url" class="site-url">Loading...</p>
+      </div>
+
+      <div id="block-buttons" class="block-buttons">
+        <button id="block-domain" class="block-btn" title="Block entire domain">
+          Block Domain
+          <span id="domain-preview" class="preview"></span>
+        </button>
+        <button id="block-subdomain" class="block-btn" title="Block this subdomain only">
+          Block Subdomain
+          <span id="subdomain-preview" class="preview"></span>
+        </button>
+        <button id="block-url" class="block-btn" title="Block this exact URL">
+          Block This URL
+          <span id="url-preview" class="preview"></span>
+        </button>
+        <button
+          id="whitelist-btn"
+          class="whitelist-btn"
+          title="Allow this domain to bypass blocking"
+        >
+          Whitelist Domain
+        </button>
+      </div>
+
+      <div id="status-msg" class="status"></div>
+
+      <div class="footer">
+        <button id="open-dashboard" class="dashboard-btn">Manage Patterns</button>
       </div>
     </div>
 
-    <div class="pause-controls">
-      <select id="pause-select" class="pause-select">
-        <option value="">Pause blocking...</option>
-        <option value="5">5 minutes</option>
-        <option value="15">15 minutes</option>
-        <option value="30">30 minutes</option>
-        <option value="60">1 hour</option>
-        <option value="120">2 hours</option>
-        <option value="resume">Resume now</option>
-      </select>
-      <span id="pause-status" class="pause-status"></span>
-    </div>
-
-    <div class="stats">
-      <div class="stat">
-        <span class="stat-value" id="stat-today">0</span>
-        <span class="stat-label">Today</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value" id="stat-total">0</span>
-        <span class="stat-label">Total</span>
-      </div>
-      <div class="stat">
-        <span class="stat-value" id="stat-patterns">0</span>
-        <span class="stat-label">Patterns</span>
-      </div>
-    </div>
-
-    <div id="current-site">
-      <p class="site-label">Current site:</p>
-      <p id="site-url" class="site-url">Loading...</p>
-    </div>
-
-    <div id="block-buttons" class="block-buttons">
-      <button id="block-domain" class="block-btn" title="Block entire domain">
-        Block Domain
-        <span id="domain-preview" class="preview"></span>
-      </button>
-      <button id="block-subdomain" class="block-btn" title="Block this subdomain only">
-        Block Subdomain
-        <span id="subdomain-preview" class="preview"></span>
-      </button>
-      <button id="block-url" class="block-btn" title="Block this exact URL">
-        Block This URL
-        <span id="url-preview" class="preview"></span>
-      </button>
-      <button id="whitelist-btn" class="whitelist-btn" title="Allow this domain to bypass blocking">
-        Whitelist Domain
-      </button>
-    </div>
-
-    <div id="status-msg" class="status"></div>
-
-    <div class="footer">
-      <button id="open-dashboard" class="dashboard-btn">Manage Patterns</button>
-    </div>
-  </div>
-
-  <script src="popup.js"></script>
-</body>
+    <script src="popup.js"></script>
+  </body>
 </html>

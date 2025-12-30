@@ -1,89 +1,120 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-  <meta charset="UTF-8">
-  <title>URL Blocker - Dashboard</title>
-  <link rel="stylesheet" href="dashboard.css">
-</head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>URL Blocker Dashboard</h1>
-      <div class="header-actions">
-        <button id="import-btn" class="btn btn-secondary" title="Import patterns (Ctrl+I)">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-            <path d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"/>
-          </svg>
-          Import
-        </button>
-        <button id="export-btn" class="btn btn-secondary" title="Export patterns (Ctrl+E)">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-            <path d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"/>
-            <path d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"/>
-          </svg>
-          Export
-        </button>
-        <input type="file" id="import-file" accept=".json" style="display: none;">
-      </div>
-    </div>
-
-    <div class="tabs">
-      <button id="patterns-tab" class="tab active">Block Patterns</button>
-      <button id="whitelist-tab" class="tab">Whitelist</button>
-    </div>
-
-    <div id="status-msg" class="status-msg"></div>
-
-    <!-- Patterns Section -->
-    <div id="patterns-section" class="section">
-      <div class="section-header">
-        <div class="add-pattern">
-          <input type="text" id="add-pattern-input" placeholder="Enter regex pattern to block (e.g., .*facebook\.com.*)" class="pattern-input">
-          <button id="add-pattern-btn" class="btn btn-primary">Add Pattern</button>
-        </div>
-        <div class="search-container">
-          <input type="text" id="pattern-search" placeholder="Search patterns..." class="search-input">
-          <span id="pattern-count" class="count">0 patterns</span>
+  <head>
+    <meta charset="UTF-8" />
+    <title>URL Blocker - Dashboard</title>
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body>
+    <div class="container">
+      <div class="header">
+        <h1>URL Blocker Dashboard</h1>
+        <div class="header-actions">
+          <button id="import-btn" class="btn btn-secondary" title="Import patterns (Ctrl+I)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+              />
+              <path
+                d="M7.646 1.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1-.708.708L8.5 2.707V11.5a.5.5 0 0 1-1 0V2.707L5.354 4.854a.5.5 0 1 1-.708-.708l3-3z"
+              />
+            </svg>
+            Import
+          </button>
+          <button id="export-btn" class="btn btn-secondary" title="Export patterns (Ctrl+E)">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M.5 9.9a.5.5 0 0 1 .5.5v2.5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-2.5a.5.5 0 0 1 1 0v2.5a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2v-2.5a.5.5 0 0 1 .5-.5z"
+              />
+              <path
+                d="M7.646 11.854a.5.5 0 0 0 .708 0l3-3a.5.5 0 0 0-.708-.708L8.5 10.293V1.5a.5.5 0 0 0-1 0v8.793L5.354 8.146a.5.5 0 1 0-.708.708l3 3z"
+              />
+            </svg>
+            Export
+          </button>
+          <input type="file" id="import-file" accept=".json" style="display: none" />
         </div>
       </div>
 
-      <div id="patterns-list" class="patterns-list">
-        <div class="empty-state">Loading...</div>
+      <div class="tabs">
+        <button id="patterns-tab" class="tab active">Block Patterns</button>
+        <button id="whitelist-tab" class="tab">Whitelist</button>
       </div>
-    </div>
 
-    <!-- Whitelist Section -->
-    <div id="whitelist-section" class="section" style="display: none;">
-      <div class="section-header">
-        <div class="add-pattern">
-          <input type="text" id="add-whitelist-input" placeholder="Enter regex pattern to whitelist (e.g., .*work\.example\.com.*)" class="pattern-input">
-          <button id="add-whitelist-btn" class="btn btn-primary">Add to Whitelist</button>
+      <div id="status-msg" class="status-msg"></div>
+
+      <!-- Patterns Section -->
+      <div id="patterns-section" class="section">
+        <div class="section-header">
+          <div class="add-pattern">
+            <input
+              type="text"
+              id="add-pattern-input"
+              placeholder="Enter regex pattern to block (e.g., .*facebook\.com.*)"
+              class="pattern-input"
+            />
+            <button id="add-pattern-btn" class="btn btn-primary">Add Pattern</button>
+          </div>
+          <div class="search-container">
+            <input
+              type="text"
+              id="pattern-search"
+              placeholder="Search patterns..."
+              class="search-input"
+            />
+            <span id="pattern-count" class="count">0 patterns</span>
+          </div>
         </div>
-        <div class="search-container">
-          <input type="text" id="whitelist-search" placeholder="Search whitelist..." class="search-input">
-          <span id="whitelist-count" class="count">0 entries</span>
+
+        <div id="patterns-list" class="patterns-list">
+          <div class="empty-state">Loading...</div>
         </div>
       </div>
 
-      <div id="whitelist-list" class="patterns-list">
-        <div class="empty-state">Loading...</div>
+      <!-- Whitelist Section -->
+      <div id="whitelist-section" class="section" style="display: none">
+        <div class="section-header">
+          <div class="add-pattern">
+            <input
+              type="text"
+              id="add-whitelist-input"
+              placeholder="Enter regex pattern to whitelist (e.g., .*work\.example\.com.*)"
+              class="pattern-input"
+            />
+            <button id="add-whitelist-btn" class="btn btn-primary">Add to Whitelist</button>
+          </div>
+          <div class="search-container">
+            <input
+              type="text"
+              id="whitelist-search"
+              placeholder="Search whitelist..."
+              class="search-input"
+            />
+            <span id="whitelist-count" class="count">0 entries</span>
+          </div>
+        </div>
+
+        <div id="whitelist-list" class="patterns-list">
+          <div class="empty-state">Loading...</div>
+        </div>
+      </div>
+
+      <div class="help-section">
+        <h2>Pattern Examples</h2>
+        <ul>
+          <li><code>.*facebook\.com.*</code> - Blocks all Facebook pages</li>
+          <li><code>.*youtube\.com/shorts.*</code> - Blocks YouTube Shorts only</li>
+          <li><code>.*twitter\.com.*|.*x\.com.*</code> - Blocks Twitter/X</li>
+          <li><code>.*reddit\.com.*</code> - Blocks Reddit</li>
+          <li><code>.*\.(poker|casino)\..*</code> - Blocks gambling sites</li>
+        </ul>
+        <p class="help-tip">
+          Tip: Use the popup to quickly block the current site, or add patterns here for more
+          control.
+        </p>
       </div>
     </div>
 
-    <div class="help-section">
-      <h2>Pattern Examples</h2>
-      <ul>
-        <li><code>.*facebook\.com.*</code> - Blocks all Facebook pages</li>
-        <li><code>.*youtube\.com/shorts.*</code> - Blocks YouTube Shorts only</li>
-        <li><code>.*twitter\.com.*|.*x\.com.*</code> - Blocks Twitter/X</li>
-        <li><code>.*reddit\.com.*</code> - Blocks Reddit</li>
-        <li><code>.*\.(poker|casino)\..*</code> - Blocks gambling sites</li>
-      </ul>
-      <p class="help-tip">Tip: Use the popup to quickly block the current site, or add patterns here for more control.</p>
-    </div>
-  </div>
-
-  <script src="dashboard.js"></script>
-</body>
+    <script src="dashboard.js"></script>
+  </body>
 </html>

@@ -7,7 +7,7 @@ let patternCache = {
   compiled: [],
   whitelist: [],
   compiledWhitelist: [],
-  lastUpdate: 0
+  lastUpdate: 0,
 };
 
 // Blocking state
@@ -18,20 +18,20 @@ let pauseUntil = null;
 let stats = {
   blockedToday: 0,
   blockedTotal: 0,
-  lastReset: new Date().toDateString()
+  lastReset: new Date().toDateString(),
 };
 
 // ReDoS protection: detect potentially dangerous patterns
 function isPatternSafe(pattern) {
   // Detect catastrophic backtracking patterns
   const dangerousPatterns = [
-    /\([^)]*\+[^)]*\)\+/,           // (a+)+
-    /\([^)]*\*[^)]*\)\+/,           // (a*)+
-    /\([^)]*\+[^)]*\)\*/,           // (a+)*
-    /\([^)]*\*[^)]*\)\*/,           // (a*)*
-    /\([^)]*\|[^)]*\)\+/,           // (a|b)+  with complex groups
-    /\.[\*\+]\.\*[\*\+]/,           // .*.*+ or similar
-    /\([^)]+\)\{[\d,]+\}\+/,        // Nested quantifiers with braces
+    /\([^)]*\+[^)]*\)\+/, // (a+)+
+    /\([^)]*\*[^)]*\)\+/, // (a*)+
+    /\([^)]*\+[^)]*\)\*/, // (a+)*
+    /\([^)]*\*[^)]*\)\*/, // (a*)*
+    /\([^)]*\|[^)]*\)\+/, // (a|b)+  with complex groups
+    /\.[\*\+]\.\*[\*\+]/, // .*.*+ or similar
+    /\([^)]+\)\{[\d,]+\}\+/, // Nested quantifiers with braces
   ];
 
   for (const dangerous of dangerousPatterns) {
@@ -122,7 +122,7 @@ async function updatePatternCache() {
         compiledPatterns.push({
           pattern,
           regex: compiled,
-          enabled
+          enabled,
         });
       }
     }
@@ -142,7 +142,7 @@ async function updatePatternCache() {
         compiledWhitelist.push({
           pattern,
           regex: compiled,
-          enabled
+          enabled,
         });
       }
     }
@@ -153,7 +153,7 @@ async function updatePatternCache() {
     compiled: compiledPatterns,
     whitelist,
     compiledWhitelist,
-    lastUpdate: Date.now()
+    lastUpdate: Date.now(),
   };
 }
 
@@ -167,9 +167,11 @@ function isBlockingActive() {
     } else {
       // Pause expired, clear it
       pauseUntil = null;
-      chrome.storage.sync.set({
-        settings: { enabled: isEnabled, pauseUntil: null }
-      }).catch(e => console.error('Failed to clear pause state:', e));
+      chrome.storage.sync
+        .set({
+          settings: { enabled: isEnabled, pauseUntil: null },
+        })
+        .catch((e) => console.error('Failed to clear pause state:', e));
     }
   }
 
@@ -204,13 +206,13 @@ async function incrementBlockCount() {
 }
 
 // Initialize cache on startup
-updatePatternCache().catch(e => console.error('Failed to initialize pattern cache:', e));
+updatePatternCache().catch((e) => console.error('Failed to initialize pattern cache:', e));
 
 // Listen for storage changes to update cache
 chrome.storage.onChanged.addListener((changes, areaName) => {
   if (areaName === 'sync') {
     if (changes.patterns || changes.whitelist || changes.settings) {
-      updatePatternCache().catch(e => console.error('Failed to update pattern cache:', e));
+      updatePatternCache().catch((e) => console.error('Failed to update pattern cache:', e));
     }
   }
 });
@@ -223,11 +225,13 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
   const url = details.url;
 
   // Skip browser internal pages
-  if (url.startsWith('chrome://') ||
-      url.startsWith('chrome-extension://') ||
-      url.startsWith('about:') ||
-      url.startsWith('edge://') ||
-      url.startsWith('brave://')) {
+  if (
+    url.startsWith('chrome://') ||
+    url.startsWith('chrome-extension://') ||
+    url.startsWith('about:') ||
+    url.startsWith('edge://') ||
+    url.startsWith('brave://')
+  ) {
     return;
   }
 
@@ -251,9 +255,12 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
     await incrementBlockCount();
 
     // Redirect to blocked page
-    const blockedUrl = chrome.runtime.getURL('blocked.html') +
-      '?url=' + encodeURIComponent(url) +
-      '&pattern=' + encodeURIComponent(matchedPattern);
+    const blockedUrl =
+      chrome.runtime.getURL('blocked.html') +
+      '?url=' +
+      encodeURIComponent(url) +
+      '&pattern=' +
+      encodeURIComponent(matchedPattern);
 
     await chrome.tabs.update(details.tabId, { url: blockedUrl });
   }
@@ -267,57 +274,68 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
       pauseUntil,
       stats,
       patternCount: patternCache.compiled.length,
-      whitelistCount: patternCache.compiledWhitelist.length
+      whitelistCount: patternCache.compiledWhitelist.length,
     });
     return true;
   }
 
   if (message.type === 'toggleEnabled') {
     isEnabled = message.enabled;
-    chrome.storage.sync.set({
-      settings: { enabled: isEnabled, pauseUntil }
-    }).then(() => {
-      sendResponse({ success: true, enabled: isEnabled });
-    }).catch(e => {
-      console.error('Failed to save toggle state:', e);
-      sendResponse({ success: false, error: e.message });
-    });
+    chrome.storage.sync
+      .set({
+        settings: { enabled: isEnabled, pauseUntil },
+      })
+      .then(() => {
+        sendResponse({ success: true, enabled: isEnabled });
+      })
+      .catch((e) => {
+        console.error('Failed to save toggle state:', e);
+        sendResponse({ success: false, error: e.message });
+      });
     return true;
   }
 
   if (message.type === 'pauseFor') {
     pauseUntil = Date.now() + message.duration;
-    chrome.storage.sync.set({
-      settings: { enabled: isEnabled, pauseUntil }
-    }).then(() => {
-      sendResponse({ success: true, pauseUntil });
-    }).catch(e => {
-      console.error('Failed to save pause state:', e);
-      sendResponse({ success: false, error: e.message });
-    });
+    chrome.storage.sync
+      .set({
+        settings: { enabled: isEnabled, pauseUntil },
+      })
+      .then(() => {
+        sendResponse({ success: true, pauseUntil });
+      })
+      .catch((e) => {
+        console.error('Failed to save pause state:', e);
+        sendResponse({ success: false, error: e.message });
+      });
     return true;
   }
 
   if (message.type === 'resume') {
     pauseUntil = null;
-    chrome.storage.sync.set({
-      settings: { enabled: isEnabled, pauseUntil: null }
-    }).then(() => {
-      sendResponse({ success: true });
-    }).catch(e => {
-      console.error('Failed to save resume state:', e);
-      sendResponse({ success: false, error: e.message });
-    });
+    chrome.storage.sync
+      .set({
+        settings: { enabled: isEnabled, pauseUntil: null },
+      })
+      .then(() => {
+        sendResponse({ success: true });
+      })
+      .catch((e) => {
+        console.error('Failed to save resume state:', e);
+        sendResponse({ success: false, error: e.message });
+      });
     return true;
   }
 
   if (message.type === 'refreshCache') {
-    updatePatternCache().then(() => {
-      sendResponse({ success: true });
-    }).catch(e => {
-      console.error('Failed to refresh cache:', e);
-      sendResponse({ success: false, error: e.message });
-    });
+    updatePatternCache()
+      .then(() => {
+        sendResponse({ success: true });
+      })
+      .catch((e) => {
+        console.error('Failed to refresh cache:', e);
+        sendResponse({ success: false, error: e.message });
+      });
     return true;
   }
 
@@ -327,7 +345,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
     sendResponse({
       blocked: isBlocked && !whitelisted,
       matchedPattern: isBlocked,
-      whitelisted
+      whitelisted,
     });
     return true;
   }

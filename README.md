@@ -1,6 +1,6 @@
 # URL Blocker
 
-A simple, free Chrome extension that blocks websites matching custom regex patterns. Built to help you stay focused and productive.
+A simple, free browser extension that blocks websites matching custom regex patterns. Works on Chrome and Firefox. Built to help you stay focused and productive.
 
 **No ads. No limits. No tracking. No premium tiers. Just a tool that works.**
 
@@ -9,11 +9,15 @@ This extension is and will always be completely free. It was created to help peo
 ## Features
 
 - **Custom Regex Patterns**: Block URLs using powerful regular expression matching
+- **Whitelist Support**: Allow specific URLs to bypass blocking rules
 - **Real-time Blocking**: Instantly blocks matching URLs before they load
 - **Sync Across Devices**: Patterns sync via Chrome's built-in storage (when signed in)
 - **Simple Management**: Easy-to-use popup for adding and removing patterns
+- **Dashboard**: Full-featured options page for managing patterns and whitelist
+- **Import/Export**: Backup and restore your patterns as JSON
 - **Informative Block Page**: Shows which URL was blocked and why
 - **Unlimited Patterns**: Add as many blocking rules as you need
+- **Cross-Browser**: Works on Chrome and Firefox
 - **100% Free**: No ads, no premium features, no data collection
 
 ## Installation
@@ -21,11 +25,18 @@ This extension is and will always be completely free. It was created to help peo
 ### From Chrome Web Store
 *(Coming soon)*
 
-### Manual Installation (Developer Mode)
+### Manual Installation (Chrome)
 1. Download or clone this repository
 2. Open Chrome and navigate to `chrome://extensions/`
 3. Enable "Developer mode" in the top right corner
 4. Click "Load unpacked" and select the extension folder
+5. The URL Blocker icon will appear in your toolbar
+
+### Manual Installation (Firefox)
+1. Download or clone this repository
+2. Rename `manifest.firefox.json` to `manifest.json` (backup the original first)
+3. Open Firefox and navigate to `about:debugging#/runtime/this-firefox`
+4. Click "Load Temporary Add-on" and select the `manifest.json` file
 5. The URL Blocker icon will appear in your toolbar
 
 ## Usage
@@ -73,15 +84,25 @@ See [PRIVACY.md](PRIVACY.md) for our full privacy policy.
 ### Project Structure
 ```
 url-blocker-extension/
-├── manifest.json      # Extension configuration
-├── popup.html/js/css  # Toolbar popup UI
-├── background.js      # Core blocking logic (service worker)
-├── blocked.html/js/css # Block notification page
-└── icons/             # Extension icons
+├── manifest.json          # Chrome extension configuration
+├── manifest.firefox.json  # Firefox extension configuration
+├── popup.html/js/css      # Toolbar popup UI
+├── dashboard.html/js/css  # Options page for pattern management
+├── background.js          # Core blocking logic (service worker)
+├── blocked.html/js/css    # Block notification page
+├── icons/                 # Extension icons
+└── package.json           # Development scripts and dependencies
 ```
 
-### Building from Source
-No build step required. The extension runs directly from source files.
+### Development Scripts
+```bash
+npm install              # Install dependencies
+npm run lint             # Run ESLint
+npm run format           # Format code with Prettier
+npm run check            # Run all checks (lint, format, validate)
+npm run package          # Build Chrome extension zip
+npm run package:firefox  # Build Firefox extension zip
+```
 
 ## Contributing
 
