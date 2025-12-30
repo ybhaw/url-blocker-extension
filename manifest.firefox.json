@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "URL Blocker",
-  "version": "2.0.0",
+  "version": "0.0.1",
   "description": "Block distracting websites and stay focused. Patterns sync across devices. 100% free - no ads, no limits, no premium.",
   "author": "ybhaw",
   "homepage_url": "https://github.com/ybhaw/url-blocker-extension",
