@@ -30,81 +30,246 @@ document.addEventListener('DOMContentLoaded', () => {
   // Extended list of two-part TLDs
   const twoPartTlds = new Set([
     // UK
-    'co.uk', 'org.uk', 'me.uk', 'ac.uk', 'gov.uk', 'ltd.uk', 'plc.uk', 'net.uk', 'sch.uk',
+    'co.uk',
+    'org.uk',
+    'me.uk',
+    'ac.uk',
+    'gov.uk',
+    'ltd.uk',
+    'plc.uk',
+    'net.uk',
+    'sch.uk',
     // Australia
-    'com.au', 'net.au', 'org.au', 'edu.au', 'gov.au', 'asn.au', 'id.au',
+    'com.au',
+    'net.au',
+    'org.au',
+    'edu.au',
+    'gov.au',
+    'asn.au',
+    'id.au',
     // New Zealand
-    'co.nz', 'net.nz', 'org.nz', 'govt.nz', 'ac.nz', 'school.nz', 'geek.nz', 'gen.nz',
+    'co.nz',
+    'net.nz',
+    'org.nz',
+    'govt.nz',
+    'ac.nz',
+    'school.nz',
+    'geek.nz',
+    'gen.nz',
     // Japan
-    'co.jp', 'or.jp', 'ne.jp', 'ac.jp', 'ad.jp', 'ed.jp', 'go.jp', 'gr.jp', 'lg.jp',
+    'co.jp',
+    'or.jp',
+    'ne.jp',
+    'ac.jp',
+    'ad.jp',
+    'ed.jp',
+    'go.jp',
+    'gr.jp',
+    'lg.jp',
     // Brazil
-    'com.br', 'net.br', 'org.br', 'gov.br', 'edu.br', 'art.br', 'blog.br',
+    'com.br',
+    'net.br',
+    'org.br',
+    'gov.br',
+    'edu.br',
+    'art.br',
+    'blog.br',
     // India
-    'co.in', 'net.in', 'org.in', 'gen.in', 'firm.in', 'ind.in', 'ac.in', 'edu.in', 'res.in', 'gov.in',
+    'co.in',
+    'net.in',
+    'org.in',
+    'gen.in',
+    'firm.in',
+    'ind.in',
+    'ac.in',
+    'edu.in',
+    'res.in',
+    'gov.in',
     // South Africa
-    'co.za', 'net.za', 'org.za', 'gov.za', 'edu.za', 'ac.za',
+    'co.za',
+    'net.za',
+    'org.za',
+    'gov.za',
+    'edu.za',
+    'ac.za',
     // Russia
-    'com.ru', 'net.ru', 'org.ru', 'pp.ru',
+    'com.ru',
+    'net.ru',
+    'org.ru',
+    'pp.ru',
     // Germany
     'com.de',
     // France
     'com.fr',
     // South Korea
-    'co.kr', 'ne.kr', 'or.kr', 'go.kr', 're.kr', 'pe.kr',
+    'co.kr',
+    'ne.kr',
+    'or.kr',
+    'go.kr',
+    're.kr',
+    'pe.kr',
     // China
-    'com.cn', 'net.cn', 'org.cn', 'gov.cn', 'edu.cn', 'ac.cn',
+    'com.cn',
+    'net.cn',
+    'org.cn',
+    'gov.cn',
+    'edu.cn',
+    'ac.cn',
     // Taiwan
-    'com.tw', 'net.tw', 'org.tw', 'edu.tw', 'gov.tw', 'idv.tw',
+    'com.tw',
+    'net.tw',
+    'org.tw',
+    'edu.tw',
+    'gov.tw',
+    'idv.tw',
     // Hong Kong
-    'com.hk', 'net.hk', 'org.hk', 'edu.hk', 'gov.hk', 'idv.hk',
+    'com.hk',
+    'net.hk',
+    'org.hk',
+    'edu.hk',
+    'gov.hk',
+    'idv.hk',
     // Singapore
-    'com.sg', 'net.sg', 'org.sg', 'edu.sg', 'gov.sg', 'per.sg',
+    'com.sg',
+    'net.sg',
+    'org.sg',
+    'edu.sg',
+    'gov.sg',
+    'per.sg',
     // Malaysia
-    'com.my', 'net.my', 'org.my', 'edu.my', 'gov.my',
+    'com.my',
+    'net.my',
+    'org.my',
+    'edu.my',
+    'gov.my',
     // Indonesia
-    'co.id', 'or.id', 'ac.id', 'go.id', 'web.id', 'sch.id',
+    'co.id',
+    'or.id',
+    'ac.id',
+    'go.id',
+    'web.id',
+    'sch.id',
     // Thailand
-    'co.th', 'in.th', 'ac.th', 'go.th', 'or.th', 'net.th',
+    'co.th',
+    'in.th',
+    'ac.th',
+    'go.th',
+    'or.th',
+    'net.th',
     // Vietnam
-    'com.vn', 'net.vn', 'org.vn', 'edu.vn', 'gov.vn', 'biz.vn',
+    'com.vn',
+    'net.vn',
+    'org.vn',
+    'edu.vn',
+    'gov.vn',
+    'biz.vn',
     // Philippines
-    'com.ph', 'net.ph', 'org.ph', 'edu.ph', 'gov.ph',
+    'com.ph',
+    'net.ph',
+    'org.ph',
+    'edu.ph',
+    'gov.ph',
     // Mexico
-    'com.mx', 'net.mx', 'org.mx', 'edu.mx', 'gob.mx',
+    'com.mx',
+    'net.mx',
+    'org.mx',
+    'edu.mx',
+    'gob.mx',
     // Argentina
-    'com.ar', 'net.ar', 'org.ar', 'edu.ar', 'gov.ar', 'int.ar',
+    'com.ar',
+    'net.ar',
+    'org.ar',
+    'edu.ar',
+    'gov.ar',
+    'int.ar',
     // Colombia
-    'com.co', 'net.co', 'org.co', 'edu.co', 'gov.co',
+    'com.co',
+    'net.co',
+    'org.co',
+    'edu.co',
+    'gov.co',
     // Chile
     'cl',
     // Peru
-    'com.pe', 'net.pe', 'org.pe', 'edu.pe', 'gob.pe',
+    'com.pe',
+    'net.pe',
+    'org.pe',
+    'edu.pe',
+    'gob.pe',
     // Turkey
-    'com.tr', 'net.tr', 'org.tr', 'edu.tr', 'gov.tr', 'biz.tr',
+    'com.tr',
+    'net.tr',
+    'org.tr',
+    'edu.tr',
+    'gov.tr',
+    'biz.tr',
     // Israel
-    'co.il', 'net.il', 'org.il', 'ac.il', 'gov.il',
+    'co.il',
+    'net.il',
+    'org.il',
+    'ac.il',
+    'gov.il',
     // UAE
     'ae',
     // Saudi Arabia
-    'com.sa', 'net.sa', 'org.sa', 'edu.sa', 'gov.sa',
+    'com.sa',
+    'net.sa',
+    'org.sa',
+    'edu.sa',
+    'gov.sa',
     // Egypt
-    'com.eg', 'net.eg', 'org.eg', 'edu.eg', 'gov.eg',
+    'com.eg',
+    'net.eg',
+    'org.eg',
+    'edu.eg',
+    'gov.eg',
     // Nigeria
-    'com.ng', 'net.ng', 'org.ng', 'edu.ng', 'gov.ng',
+    'com.ng',
+    'net.ng',
+    'org.ng',
+    'edu.ng',
+    'gov.ng',
     // Kenya
-    'co.ke', 'or.ke', 'ne.ke', 'go.ke', 'ac.ke',
+    'co.ke',
+    'or.ke',
+    'ne.ke',
+    'go.ke',
+    'ac.ke',
     // Pakistan
-    'com.pk', 'net.pk', 'org.pk', 'edu.pk', 'gov.pk',
+    'com.pk',
+    'net.pk',
+    'org.pk',
+    'edu.pk',
+    'gov.pk',
     // Bangladesh
-    'com.bd', 'net.bd', 'org.bd', 'edu.bd', 'gov.bd',
+    'com.bd',
+    'net.bd',
+    'org.bd',
+    'edu.bd',
+    'gov.bd',
     // European
-    'co.at', 'or.at', 'co.it', 'co.nl', 'co.be', 'co.no', 'co.se', 'co.dk', 'co.fi',
+    'co.at',
+    'or.at',
+    'co.it',
+    'co.nl',
+    'co.be',
+    'co.no',
+    'co.se',
+    'co.dk',
+    'co.fi',
     // Other common ones
-    'com.ua', 'com.pl', 'com.gr', 'com.pt', 'com.es', 'com.ro', 'com.cz', 'com.hu'
+    'com.ua',
+    'com.pl',
+    'com.gr',
+    'com.pt',
+    'com.es',
+    'com.ro',
+    'com.cz',
+    'com.hu',
   ]);
 
   // Initialize popup
-  init().catch(e => console.error('Failed to initialize popup:', e));
+  init().catch((e) => console.error('Failed to initialize popup:', e));
 
   async function init() {
     // Get extension status
@@ -145,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Check if URL is already blocked or whitelisted
           checkCurrentUrlStatus();
-        } catch (e) {
+        } catch (_e) {
           siteUrl.textContent = 'Invalid URL';
           disableBlockButtons();
         }
@@ -211,7 +376,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const result = await chrome.runtime.sendMessage({
         type: 'checkUrl',
-        url: currentUrl
+        url: currentUrl,
       });
 
       if (result.whitelisted) {
@@ -231,7 +396,7 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       await chrome.runtime.sendMessage({
         type: 'toggleEnabled',
-        enabled: enableToggle.checked
+        enabled: enableToggle.checked,
       });
       extensionStatus.enabled = enableToggle.checked;
       updateToggleLabel();
@@ -255,7 +420,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const duration = parseInt(value, 10) * 60 * 1000; // Convert minutes to ms
         const result = await chrome.runtime.sendMessage({
           type: 'pauseFor',
-          duration
+          duration,
         });
         extensionStatus.pauseUntil = result.pauseUntil;
         showStatus(`Paused for ${value} minutes`, 'success');
@@ -313,9 +478,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const patterns = result.patterns || [];
 
       // Check for existing pattern (support both string and object format)
-      const exists = patterns.some(p =>
-        (typeof p === 'string' ? p : p.pattern) === pattern
-      );
+      const exists = patterns.some((p) => (typeof p === 'string' ? p : p.pattern) === pattern);
 
       if (exists) {
         showStatus('Pattern already exists', 'warning');
@@ -338,9 +501,7 @@ document.addEventListener('DOMContentLoaded', () => {
     chrome.storage.sync.get(['whitelist'], (result) => {
       const whitelist = result.whitelist || [];
 
-      const exists = whitelist.some(p =>
-        (typeof p === 'string' ? p : p.pattern) === pattern
-      );
+      const exists = whitelist.some((p) => (typeof p === 'string' ? p : p.pattern) === pattern);
 
       if (exists) {
         showStatus('Already whitelisted', 'warning');
@@ -397,11 +558,13 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   function isInternalUrl(url) {
-    return url.startsWith('chrome://') ||
-           url.startsWith('chrome-extension://') ||
-           url.startsWith('about:') ||
-           url.startsWith('edge://') ||
-           url.startsWith('brave://') ||
-           url.startsWith('moz-extension://');
+    return (
+      url.startsWith('chrome://') ||
+      url.startsWith('chrome-extension://') ||
+      url.startsWith('about:') ||
+      url.startsWith('edge://') ||
+      url.startsWith('brave://') ||
+      url.startsWith('moz-extension://')
+    );
   }
 });

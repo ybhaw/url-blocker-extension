@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', () => {
   // State
   let patterns = [];
   let whitelist = [];
-  let currentTab = 'patterns';
+  let _currentTab = 'patterns';
   let searchQuery = '';
 
   // DOM Elements - Tabs
@@ -50,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   whitelistTab.addEventListener('click', () => switchTab('whitelist'));
 
   function switchTab(tab) {
-    currentTab = tab;
+    _currentTab = tab;
     if (tab === 'patterns') {
       patternsTab.classList.add('active');
       whitelistTab.classList.remove('active');
@@ -68,14 +68,14 @@ document.addEventListener('DOMContentLoaded', () => {
   function loadData() {
     chrome.storage.sync.get(['patterns', 'whitelist'], (result) => {
       // Normalize patterns to object format
-      patterns = (result.patterns || []).map(p => {
+      patterns = (result.patterns || []).map((p) => {
         if (typeof p === 'string') {
           return { pattern: p, enabled: true };
         }
         return { pattern: p.pattern, enabled: p.enabled !== false };
       });
 
-      whitelist = (result.whitelist || []).map(p => {
+      whitelist = (result.whitelist || []).map((p) => {
         if (typeof p === 'string') {
           return { pattern: p, enabled: true };
         }
@@ -98,7 +98,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (dangerous.test(pattern)) {
         return {
           valid: false,
-          error: 'Pattern may cause performance issues (catastrophic backtracking)'
+          error: 'Pattern may cause performance issues (catastrophic backtracking)',
         };
       }
     }
@@ -131,8 +131,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   // Render patterns list
   function renderPatterns() {
-    const filtered = patterns.filter(p =>
-      !searchQuery || p.pattern.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = patterns.filter(
+      (p) => !searchQuery || p.pattern.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     patternCount.textContent = `${filtered.length} of ${patterns.length} patterns`;
@@ -146,12 +146,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    patternsList.innerHTML = filtered.map((p, idx) => {
-      const originalIdx = patterns.indexOf(p);
-      const validation = validatePattern(p.pattern);
-      const hasWarning = !validation.valid;
+    patternsList.innerHTML = filtered
+      .map((p, _idx) => {
+        const originalIdx = patterns.indexOf(p);
+        const validation = validatePattern(p.pattern);
+        const hasWarning = !validation.valid;
 
-      return `
+        return `
         <div class="pattern-item ${!p.enabled ? 'disabled' : ''} ${hasWarning ? 'has-warning' : ''}" data-index="${originalIdx}">
           <div class="pattern-toggle">
             <input type="checkbox" class="toggle-checkbox" ${p.enabled ? 'checked' : ''} data-action="toggle" data-index="${originalIdx}">
@@ -175,13 +176,14 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
-    }).join('');
+      })
+      .join('');
   }
 
   // Render whitelist
   function renderWhitelist() {
-    const filtered = whitelist.filter(p =>
-      !searchQuery || p.pattern.toLowerCase().includes(searchQuery.toLowerCase())
+    const filtered = whitelist.filter(
+      (p) => !searchQuery || p.pattern.toLowerCase().includes(searchQuery.toLowerCase())
     );
 
     whitelistCount.textContent = `${filtered.length} of ${whitelist.length} entries`;
@@ -195,12 +197,13 @@ document.addEventListener('DOMContentLoaded', () => {
       return;
     }
 
-    whitelistList.innerHTML = filtered.map((p, idx) => {
-      const originalIdx = whitelist.indexOf(p);
-      const validation = validatePattern(p.pattern);
-      const hasWarning = !validation.valid;
+    whitelistList.innerHTML = filtered
+      .map((p, _idx) => {
+        const originalIdx = whitelist.indexOf(p);
+        const validation = validatePattern(p.pattern);
+        const hasWarning = !validation.valid;
 
-      return `
+        return `
         <div class="pattern-item ${!p.enabled ? 'disabled' : ''} ${hasWarning ? 'has-warning' : ''}" data-index="${originalIdx}">
           <div class="pattern-toggle">
             <input type="checkbox" class="toggle-checkbox" ${p.enabled ? 'checked' : ''} data-action="toggle-whitelist" data-index="${originalIdx}">
@@ -224,7 +227,8 @@ document.addEventListener('DOMContentLoaded', () => {
           </div>
         </div>
       `;
-    }).join('');
+      })
+      .join('');
   }
 
   // Save patterns to storage
@@ -251,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Check for duplicates
-    const exists = list.some(p => p.pattern === pattern);
+    const exists = list.some((p) => p.pattern === pattern);
     if (exists) {
       showStatus('Pattern already exists', 'warning');
       return false;
@@ -375,7 +379,7 @@ document.addEventListener('DOMContentLoaded', () => {
       version: 1,
       exportDate: new Date().toISOString(),
       patterns,
-      whitelist
+      whitelist,
     };
 
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
@@ -386,7 +390,10 @@ document.addEventListener('DOMContentLoaded', () => {
     a.click();
     URL.revokeObjectURL(url);
 
-    showStatus(`Exported ${patterns.length} patterns and ${whitelist.length} whitelist entries`, 'success');
+    showStatus(
+      `Exported ${patterns.length} patterns and ${whitelist.length} whitelist entries`,
+      'success'
+    );
   });
 
   // Import data
@@ -411,36 +418,46 @@ document.addEventListener('DOMContentLoaded', () => {
         // Merge or replace?
         const action = confirm(
           'How do you want to import?\n\n' +
-          'OK = Merge with existing patterns\n' +
-          'Cancel = Replace all patterns'
+            'OK = Merge with existing patterns\n' +
+            'Cancel = Replace all patterns'
         );
 
         if (action) {
           // Merge
-          const newPatterns = (data.patterns || []).filter(p => {
-            const pattern = typeof p === 'string' ? p : p.pattern;
-            return !patterns.some(existing => existing.pattern === pattern);
-          }).map(p => typeof p === 'string' ? { pattern: p, enabled: true } : p);
+          const newPatterns = (data.patterns || [])
+            .filter((p) => {
+              const pattern = typeof p === 'string' ? p : p.pattern;
+              return !patterns.some((existing) => existing.pattern === pattern);
+            })
+            .map((p) => (typeof p === 'string' ? { pattern: p, enabled: true } : p));
 
-          const newWhitelist = (data.whitelist || []).filter(p => {
-            const pattern = typeof p === 'string' ? p : p.pattern;
-            return !whitelist.some(existing => existing.pattern === pattern);
-          }).map(p => typeof p === 'string' ? { pattern: p, enabled: true } : p);
+          const newWhitelist = (data.whitelist || [])
+            .filter((p) => {
+              const pattern = typeof p === 'string' ? p : p.pattern;
+              return !whitelist.some((existing) => existing.pattern === pattern);
+            })
+            .map((p) => (typeof p === 'string' ? { pattern: p, enabled: true } : p));
 
           patterns = [...patterns, ...newPatterns];
           whitelist = [...whitelist, ...newWhitelist];
 
-          showStatus(`Imported ${newPatterns.length} new patterns and ${newWhitelist.length} whitelist entries`, 'success');
+          showStatus(
+            `Imported ${newPatterns.length} new patterns and ${newWhitelist.length} whitelist entries`,
+            'success'
+          );
         } else {
           // Replace
-          patterns = (data.patterns || []).map(p =>
+          patterns = (data.patterns || []).map((p) =>
             typeof p === 'string' ? { pattern: p, enabled: true } : p
           );
-          whitelist = (data.whitelist || []).map(p =>
+          whitelist = (data.whitelist || []).map((p) =>
             typeof p === 'string' ? { pattern: p, enabled: true } : p
           );
 
-          showStatus(`Replaced with ${patterns.length} patterns and ${whitelist.length} whitelist entries`, 'success');
+          showStatus(
+            `Replaced with ${patterns.length} patterns and ${whitelist.length} whitelist entries`,
+            'success'
+          );
         }
 
         savePatterns();

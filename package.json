@@ -1,0 +1,27 @@
+{
+  "name": "url-blocker-extension",
+  "version": "2.0.0",
+  "description": "Block distracting websites and stay focused",
+  "private": true,
+  "scripts": {
+    "lint": "eslint *.js",
+    "lint:fix": "eslint *.js --fix",
+    "format:check": "prettier --check \"*.{js,css,html,json}\"",
+    "format": "prettier --write \"*.{js,css,html,json}\"",
+    "validate:manifest": "node -e \"JSON.parse(require('fs').readFileSync('manifest.json'))\"",
+    "validate:json": "node -e \"const fs=require('fs'); ['manifest.json'].forEach(f => JSON.parse(fs.readFileSync(f)))\"",
+    "web-ext:lint": "mkdir -p .tmp && cp manifest.json .tmp/ && cp manifest.firefox.json manifest.json && web-ext lint --source-dir . && cp .tmp/manifest.json manifest.json && rm -rf .tmp",
+    "check": "npm run lint && npm run format:check && npm run validate:manifest && npm run web-ext:lint",
+    "package": "mkdir -p dist && zip -r dist/url-blocker-v$(node -p \"require('./manifest.json').version\").zip manifest.json *.js *.html *.css icons/",
+    "package:firefox": "mkdir -p dist && cp manifest.firefox.json manifest.json && zip -r dist/url-blocker-firefox-v$(node -p \"require('./manifest.json').version\").zip manifest.json *.js *.html *.css icons/"
+  },
+  "devDependencies": {
+    "eslint": "^9.17.0",
+    "globals": "^15.14.0",
+    "prettier": "^3.4.2",
+    "web-ext": "^8.3.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
