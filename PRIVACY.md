@@ -4,7 +4,7 @@
 
 ## Overview
 
-URL Blocker is committed to protecting your privacy. This privacy policy explains how our Chrome extension handles your data.
+URL Blocker is committed to protecting your privacy. This privacy policy explains how our browser extension handles your data.
 
 ## Data Collection
 
@@ -14,13 +14,13 @@ URL Blocker does not collect, store, transmit, or share any personal information
 
 ## Data Storage
 
-The extension stores the following data **locally on your device** using Chrome's built-in storage API:
+The extension stores the following data **locally on your device** using the browser's built-in storage API:
 
 - **Blocking patterns**: The regex patterns you create to block URLs
 
 This data is:
-- Stored locally in your Chrome browser
-- Synced across your devices if you're signed into Chrome (via Chrome Sync)
+- Stored locally in your browser
+- Synced across your devices if you're signed into your browser (via browser sync)
 - Never transmitted to external servers
 - Never accessible to the extension developer
 
@@ -52,14 +52,14 @@ We do not share any data with third parties because we do not collect any data.
 
 ## Data Security
 
-Since all data is stored locally in your browser using Chrome's secure storage API, your data is protected by Chrome's built-in security measures.
+Since all data is stored locally in your browser using the browser's secure storage API, your data is protected by the browser's built-in security measures.
 
 ## Your Rights
 
 You have full control over your data:
 - **View**: See all stored patterns in the extension popup
 - **Delete**: Remove any pattern at any time
-- **Export**: Access your patterns via Chrome's sync storage
+- **Export**: Access your patterns via browser sync storage
 - **Clear all**: Uninstalling the extension removes all stored data
 
 ## Children's Privacy

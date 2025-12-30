@@ -226,6 +226,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
   if (
     url.startsWith('chrome://') ||
     url.startsWith('chrome-extension://') ||
+    url.startsWith('moz-extension://') ||
     url.startsWith('about:') ||
     url.startsWith('edge://') ||
     url.startsWith('brave://')

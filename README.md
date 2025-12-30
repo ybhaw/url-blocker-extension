@@ -11,7 +11,7 @@ This extension is and will always be completely free. It was created to help peo
 - **Custom Regex Patterns**: Block URLs using powerful regular expression matching
 - **Whitelist Support**: Allow specific URLs to bypass blocking rules
 - **Real-time Blocking**: Instantly blocks matching URLs before they load
-- **Sync Across Devices**: Patterns sync via Chrome's built-in storage (when signed in)
+- **Sync Across Devices**: Patterns sync via browser's built-in storage (when signed in)
 - **Simple Management**: Easy-to-use popup for adding and removing patterns
 - **Dashboard**: Full-featured options page for managing patterns and whitelist
 - **Import/Export**: Backup and restore your patterns as JSON
@@ -74,7 +74,7 @@ Click the "Delete" button next to any pattern in the list.
 This extension:
 - Does **not** collect any personal data
 - Does **not** send data to external servers
-- Stores patterns locally in Chrome's sync storage
+- Stores patterns locally in browser sync storage
 - Only accesses URLs to check against your patterns
 
 See [PRIVACY.md](PRIVACY.md) for our full privacy policy.
