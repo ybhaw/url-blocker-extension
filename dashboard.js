@@ -37,8 +37,8 @@ document.addEventListener('DOMContentLoaded', () => {
     /\([^)]*\+[^)]*\)\*/,
     /\([^)]*\*[^)]*\)\*/,
     /\([^)]*\|[^)]*\)\+/,
-    /\.[\*\+]\.\*[\*\+]/,
-    /\([^)]+\)\{[\d,]+\}\+/,
+    /\.[*+]\.\*[*+]/,
+    /\([^)]+\)\{[\d,]+}\+/,
   ];
 
   // Initialize
@@ -127,6 +127,102 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  // Create SVG element safely
+  function createSvgElement(pathData) {
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('width', '16');
+    svg.setAttribute('height', '16');
+    svg.setAttribute('viewBox', '0 0 16 16');
+    svg.setAttribute('fill', 'currentColor');
+    pathData.forEach((d) => {
+      const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      if (typeof d === 'string') {
+        path.setAttribute('d', d);
+      } else {
+        path.setAttribute('d', d.d);
+        if (d.fillRule) path.setAttribute('fill-rule', d.fillRule);
+      }
+      svg.appendChild(path);
+    });
+    return svg;
+  }
+
+  // SVG paths for icons
+  const editIconPaths = [
+    'M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-9.5 9.5a.5.5 0 0 1-.168.11l-4 1.5a.5.5 0 0 1-.65-.65l1.5-4a.5.5 0 0 1 .11-.168l9.5-9.5zM11.207 2L2 11.207V12h.793L12.5 2.293 11.207 2z',
+  ];
+  const deleteIconPaths = [
+    'M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z',
+    {
+      d: 'M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z',
+      fillRule: 'evenodd',
+    },
+  ];
+
+  // Create a pattern item element
+  function createPatternItem(p, originalIdx, actionPrefix = '') {
+    const validation = validatePattern(p.pattern);
+    const hasWarning = !validation.valid;
+
+    const item = document.createElement('div');
+    item.className = `pattern-item${!p.enabled ? ' disabled' : ''}${hasWarning ? ' has-warning' : ''}`;
+    item.dataset.index = originalIdx;
+
+    // Toggle container
+    const toggleDiv = document.createElement('div');
+    toggleDiv.className = 'pattern-toggle';
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'toggle-checkbox';
+    checkbox.checked = p.enabled;
+    checkbox.dataset.action = actionPrefix ? `toggle-${actionPrefix}` : 'toggle';
+    checkbox.dataset.index = originalIdx;
+    toggleDiv.appendChild(checkbox);
+
+    // Content container
+    const contentDiv = document.createElement('div');
+    contentDiv.className = 'pattern-content';
+    const code = document.createElement('code');
+    code.className = 'pattern-text';
+    code.textContent = p.pattern;
+    contentDiv.appendChild(code);
+
+    if (hasWarning) {
+      const warning = document.createElement('span');
+      warning.className = 'pattern-warning';
+      warning.title = validation.error;
+      warning.textContent = `Warning: ${validation.error}`;
+      contentDiv.appendChild(warning);
+    }
+
+    // Actions container
+    const actionsDiv = document.createElement('div');
+    actionsDiv.className = 'pattern-actions';
+
+    const editBtn = document.createElement('button');
+    editBtn.className = 'btn-icon';
+    editBtn.dataset.action = actionPrefix ? `edit-${actionPrefix}` : 'edit';
+    editBtn.dataset.index = originalIdx;
+    editBtn.title = 'Edit';
+    editBtn.appendChild(createSvgElement(editIconPaths));
+
+    const deleteBtn = document.createElement('button');
+    deleteBtn.className = 'btn-icon btn-danger';
+    deleteBtn.dataset.action = actionPrefix ? `delete-${actionPrefix}` : 'delete';
+    deleteBtn.dataset.index = originalIdx;
+    deleteBtn.title = 'Delete';
+    deleteBtn.appendChild(createSvgElement(deleteIconPaths));
+
+    actionsDiv.appendChild(editBtn);
+    actionsDiv.appendChild(deleteBtn);
+
+    item.appendChild(toggleDiv);
+    item.appendChild(contentDiv);
+    item.appendChild(actionsDiv);
+
+    return item;
+  }
+
   // Render patterns list
   function renderPatterns() {
     const filtered = patterns.filter(
@@ -135,47 +231,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     patternCount.textContent = `${filtered.length} of ${patterns.length} patterns`;
 
+    // Clear existing content
+    while (patternsList.firstChild) {
+      patternsList.removeChild(patternsList.firstChild);
+    }
+
     if (filtered.length === 0) {
-      patternsList.innerHTML = `
-        <div class="empty-state">
-          ${searchQuery ? 'No patterns match your search' : 'No patterns yet. Add one above!'}
-        </div>
-      `;
+      const emptyState = document.createElement('div');
+      emptyState.className = 'empty-state';
+      emptyState.textContent = searchQuery
+        ? 'No patterns match your search'
+        : 'No patterns yet. Add one above!';
+      patternsList.appendChild(emptyState);
       return;
     }
 
-    patternsList.innerHTML = filtered
-      .map((p) => {
-        const originalIdx = patterns.indexOf(p);
-        const validation = validatePattern(p.pattern);
-        const hasWarning = !validation.valid;
-
-        return `
-        <div class="pattern-item ${!p.enabled ? 'disabled' : ''} ${hasWarning ? 'has-warning' : ''}" data-index="${originalIdx}">
-          <div class="pattern-toggle">
-            <input type="checkbox" class="toggle-checkbox" ${p.enabled ? 'checked' : ''} data-action="toggle" data-index="${originalIdx}">
-          </div>
-          <div class="pattern-content">
-            <code class="pattern-text">${escapeHtml(p.pattern)}</code>
-            ${hasWarning ? `<span class="pattern-warning" title="${escapeHtml(validation.error)}">Warning: ${escapeHtml(validation.error)}</span>` : ''}
-          </div>
-          <div class="pattern-actions">
-            <button class="btn-icon" data-action="edit" data-index="${originalIdx}" title="Edit">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-9.5 9.5a.5.5 0 0 1-.168.11l-4 1.5a.5.5 0 0 1-.65-.65l1.5-4a.5.5 0 0 1 .11-.168l9.5-9.5zM11.207 2L2 11.207V12h.793L12.5 2.293 11.207 2z"/>
-              </svg>
-            </button>
-            <button class="btn-icon btn-danger" data-action="delete" data-index="${originalIdx}" title="Delete">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      `;
-      })
-      .join('');
+    filtered.forEach((p) => {
+      const originalIdx = patterns.indexOf(p);
+      patternsList.appendChild(createPatternItem(p, originalIdx));
+    });
   }
 
   // Render whitelist
@@ -186,47 +260,25 @@ document.addEventListener('DOMContentLoaded', () => {
 
     whitelistCount.textContent = `${filtered.length} of ${whitelist.length} entries`;
 
+    // Clear existing content
+    while (whitelistList.firstChild) {
+      whitelistList.removeChild(whitelistList.firstChild);
+    }
+
     if (filtered.length === 0) {
-      whitelistList.innerHTML = `
-        <div class="empty-state">
-          ${searchQuery ? 'No entries match your search' : 'No whitelist entries yet. Add one above!'}
-        </div>
-      `;
+      const emptyState = document.createElement('div');
+      emptyState.className = 'empty-state';
+      emptyState.textContent = searchQuery
+        ? 'No entries match your search'
+        : 'No whitelist entries yet. Add one above!';
+      whitelistList.appendChild(emptyState);
       return;
     }
 
-    whitelistList.innerHTML = filtered
-      .map((p) => {
-        const originalIdx = whitelist.indexOf(p);
-        const validation = validatePattern(p.pattern);
-        const hasWarning = !validation.valid;
-
-        return `
-        <div class="pattern-item ${!p.enabled ? 'disabled' : ''} ${hasWarning ? 'has-warning' : ''}" data-index="${originalIdx}">
-          <div class="pattern-toggle">
-            <input type="checkbox" class="toggle-checkbox" ${p.enabled ? 'checked' : ''} data-action="toggle-whitelist" data-index="${originalIdx}">
-          </div>
-          <div class="pattern-content">
-            <code class="pattern-text">${escapeHtml(p.pattern)}</code>
-            ${hasWarning ? `<span class="pattern-warning" title="${escapeHtml(validation.error)}">Warning: ${escapeHtml(validation.error)}</span>` : ''}
-          </div>
-          <div class="pattern-actions">
-            <button class="btn-icon" data-action="edit-whitelist" data-index="${originalIdx}" title="Edit">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M12.146.854a.5.5 0 0 1 .708 0l2.292 2.292a.5.5 0 0 1 0 .708l-9.5 9.5a.5.5 0 0 1-.168.11l-4 1.5a.5.5 0 0 1-.65-.65l1.5-4a.5.5 0 0 1 .11-.168l9.5-9.5zM11.207 2L2 11.207V12h.793L12.5 2.293 11.207 2z"/>
-              </svg>
-            </button>
-            <button class="btn-icon btn-danger" data-action="delete-whitelist" data-index="${originalIdx}" title="Delete">
-              <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
-                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
-                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
-              </svg>
-            </button>
-          </div>
-        </div>
-      `;
-      })
-      .join('');
+    filtered.forEach((p) => {
+      const originalIdx = whitelist.indexOf(p);
+      whitelistList.appendChild(createPatternItem(p, originalIdx, 'whitelist'));
+    });
   }
 
   // Save patterns to storage
@@ -501,11 +553,5 @@ document.addEventListener('DOMContentLoaded', () => {
       statusMsg.textContent = '';
       statusMsg.className = 'status-msg';
     }, 3000);
-  }
-
-  function escapeHtml(str) {
-    const div = document.createElement('div');
-    div.textContent = str;
-    return div.innerHTML;
   }
 });
