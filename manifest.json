@@ -5,7 +5,13 @@
   "description": "Block distracting websites and stay focused. Patterns sync across devices. 100% free - no ads, no limits, no premium.",
   "author": "ybhaw",
   "homepage_url": "https://github.com/ybhaw/chrome-url-blocker-extension",
-  "minimum_chrome_version": "88",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "url-blocker@ybhaw",
+      "strict_min_version": "109.0",
+      "data_collection_permissions": false
+    }
+  },
   "icons": {
     "16": "icons/icon16.png",
     "32": "icons/icon32.png",
@@ -24,7 +30,10 @@
     }
   },
   "background": {
-    "service_worker": "background.js"
+    "scripts": ["background.js"]
   },
-  "options_page": "dashboard.html"
+  "options_ui": {
+    "page": "dashboard.html",
+    "open_in_tab": true
+  }
 }

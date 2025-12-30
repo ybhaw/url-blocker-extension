@@ -30,8 +30,8 @@ function isPatternSafe(pattern) {
     /\([^)]*\+[^)]*\)\*/, // (a+)*
     /\([^)]*\*[^)]*\)\*/, // (a*)*
     /\([^)]*\|[^)]*\)\+/, // (a|b)+  with complex groups
-    /\.[\*\+]\.\*[\*\+]/, // .*.*+ or similar
-    /\([^)]+\)\{[\d,]+\}\+/, // Nested quantifiers with braces
+    /\.[*+]\.\*[*+]/, // .*.*+ or similar
+    /\([^)]+\)\{[\d,]+}\+/, // Nested quantifiers with braces
   ];
 
   for (const dangerous of dangerousPatterns) {
@@ -51,9 +51,7 @@ function isPatternSafe(pattern) {
   if (maxDepth > 5) return false;
 
   // Check for overly long patterns
-  if (pattern.length > 500) return false;
-
-  return true;
+  return pattern.length <= 500;
 }
 
 // Compile a pattern with timeout protection
