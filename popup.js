@@ -310,7 +310,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           // Check if URL is already blocked or whitelisted
           checkCurrentUrlStatus();
-        } catch (_e) {
+        } catch {
           siteUrl.textContent = 'Invalid URL';
           disableBlockButtons();
         }

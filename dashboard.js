@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', () => {
   // State
   let patterns = [];
   let whitelist = [];
-  let _currentTab = 'patterns';
   let searchQuery = '';
 
   // DOM Elements - Tabs
@@ -50,7 +49,6 @@ document.addEventListener('DOMContentLoaded', () => {
   whitelistTab.addEventListener('click', () => switchTab('whitelist'));
 
   function switchTab(tab) {
-    _currentTab = tab;
     if (tab === 'patterns') {
       patternsTab.classList.add('active');
       whitelistTab.classList.remove('active');
@@ -147,7 +145,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     patternsList.innerHTML = filtered
-      .map((p, _idx) => {
+      .map((p) => {
         const originalIdx = patterns.indexOf(p);
         const validation = validatePattern(p.pattern);
         const hasWarning = !validation.valid;
@@ -198,7 +196,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     whitelistList.innerHTML = filtered
-      .map((p, _idx) => {
+      .map((p) => {
         const originalIdx = whitelist.indexOf(p);
         const validation = validatePattern(p.pattern);
         const hasWarning = !validation.valid;

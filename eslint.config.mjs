@@ -12,7 +12,7 @@ export default [
       },
     },
     rules: {
-      "no-unused-vars": ["error", { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_" }],
+      "no-unused-vars": "error",
       "no-undef": "error",
       "no-console": "off",
       "prefer-const": "error",
