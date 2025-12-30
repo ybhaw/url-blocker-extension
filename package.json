@@ -13,15 +13,27 @@
     "web-ext:lint": "mkdir -p .tmp && cp manifest.json .tmp/ && cp manifest.firefox.json manifest.json && web-ext lint --source-dir . && cp .tmp/manifest.json manifest.json && rm -rf .tmp",
     "check": "npm run lint && npm run format:check && npm run validate:manifest && npm run web-ext:lint",
     "package": "mkdir -p dist && zip -r dist/url-blocker-v$(node -p \"require('./manifest.json').version\").zip manifest.json *.js *.html *.css icons/",
-    "package:firefox": "mkdir -p dist && cp manifest.firefox.json manifest.json && zip -r dist/url-blocker-firefox-v$(node -p \"require('./manifest.json').version\").zip manifest.json *.js *.html *.css icons/"
+    "package:firefox": "mkdir -p dist && cp manifest.firefox.json manifest.json && zip -r dist/url-blocker-firefox-v$(node -p \"require('./manifest.json').version\").zip manifest.json *.js *.html *.css icons/",
+    "prepare": "husky"
   },
   "devDependencies": {
     "eslint": "^9.17.0",
     "globals": "^15.14.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
     "web-ext": "^8.3.0"
   },
   "engines": {
     "node": ">=18"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "*.{css,html,json}": [
+      "prettier --write"
+    ]
   }
 }
